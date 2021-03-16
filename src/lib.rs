@@ -438,6 +438,9 @@ mod r2d2;
 #[cfg_attr(docsrs, doc(cfg(feature = "streams")))]
 pub mod streams;
 
+#[cfg(feature = "testing")]
+pub mod testing;
+
 mod client;
 mod cmd;
 mod commands;
