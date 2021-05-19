@@ -32,7 +32,7 @@ use std::sync::{Arc, Mutex};
 use futures::{future, FutureExt};
 
 use crate::connection::ConnectionLike;
-use crate::{Cmd, ErrorKind, RedisError, RedisResult, Value, Pipeline};
+use crate::{Cmd, ErrorKind, Pipeline, RedisError, RedisResult, Value};
 
 #[cfg(feature = "aio")]
 use crate::RedisFuture;
