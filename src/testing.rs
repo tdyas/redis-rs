@@ -300,7 +300,7 @@ impl AioConnectionLike for MockRedisConnection {
 mod tests {
     use super::MockRedisConnection;
     use crate::testing::MockCmd;
-    use crate::{cmd, ErrorKind, Value};
+    use crate::{cmd, pipe, ErrorKind, Value};
 
     #[test]
     fn sync_basic_test() {
@@ -385,5 +385,22 @@ mod tests {
             .unwrap_err();
         assert_eq!(err.kind(), ErrorKind::ClientError);
         assert!(err.detail().unwrap().contains("unexpected command"));
+    }
+
+    #[test]
+    fn pipeline_basic_test() {
+        let mut conn = MockRedisConnection::new(vec![MockCmd::with_values(
+            pipe().cmd("GET").arg("foo").cmd("GET").arg("bar"),
+            Ok(vec!["hello", "world"]),
+        )]);
+
+        let results: Vec<String> = pipe()
+            .cmd("GET")
+            .arg("foo")
+            .cmd("GET")
+            .arg("bar")
+            .query(&mut conn)
+            .expect("success");
+        assert_eq!(results, vec!["hello", "world"]);
     }
 }
